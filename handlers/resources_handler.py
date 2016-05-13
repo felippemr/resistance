@@ -87,10 +87,7 @@ class ResourcesWithParamRESTHandler(MetaResourceHandler):
 
 class ResourcesWithoutParamRESTHandler(MetaResourceHandler):
     @tornado.web.asynchronous
-    async def post(self, resource_id=None):
-        if resource_id:
-            self.write_json_error(status_code=http_status.HTTP_400)
-
+    async def post(self):
         arguments = self.get_json_arguments(force_presence=True)
         resources = self._get_collection()
 
