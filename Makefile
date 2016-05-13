@@ -16,3 +16,5 @@ clean-pyc: ## remove compiled python files
 test:
 	python -m unittest
 
+pip:
+       pip install -r requirements.txt
