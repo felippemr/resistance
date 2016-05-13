@@ -14,7 +14,7 @@ clean-pyc: ## remove compiled python files
 	@find . -name '__pycache__' -exec rm -fr {} +
 
 test:
-	python -m unittest
+	@python -m unittest
 
 pip:
-       pip install -r requirements.txt
+	@pip install -r requirements.txt
