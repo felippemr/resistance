@@ -37,6 +37,18 @@ def insert_resources_before_test(n):
     return decorator
 
 
+def get_resource_before_test():
+    def decorator(f):
+        @wraps(f)
+        def wrapped_f(*args, **kwargs):
+            resource = args[0].db.resources.find_one()
+            args[0].prepare_resource(resource)
+            kwargs['resource'] = resource
+            f(*args, **kwargs)
+        return wrapped_f
+    return decorator
+
+
 class ResourcesApiTestCase(tornado.testing.AsyncHTTPTestCase):
     def setUp(self):
         self.database_name = 'test_resistance'
