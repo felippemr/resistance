@@ -1,4 +1,6 @@
-from . import wait_to_start, insert_resources_before_test, ResourcesApiTestCase
+from . import (
+    wait_to_start, insert_resources_before_test, ResourcesApiTestCase,
+    get_resource_before_test)
 
 
 class ResourcesApiTest(ResourcesApiTestCase):
@@ -21,8 +23,8 @@ class ResourcesApiTest(ResourcesApiTestCase):
         )
 
     @insert_resources_before_test(n=1)
-    def test_get_single_resource_ok(self):
-        resource = self.get_one_resource()
+    @get_resource_before_test()
+    def test_get_single_resource_ok(self, resource):
         self.assert_response(
             self.fetch(
                 '/api/v0.1/resources/{}'.format(resource['_id']),
@@ -56,8 +58,8 @@ class ResourcesApiTest(ResourcesApiTestCase):
         )
 
     @insert_resources_before_test(n=1)
-    def test_delete_resource_ok(self):
-        resource = self.get_one_resource()
+    @get_resource_before_test()
+    def test_delete_resource_ok(self, resource):
         self.assert_response(
             self.fetch(
                 '/api/v0.1/resources/{}'.format(resource['_id']),
@@ -74,27 +76,26 @@ class ResourcesApiTest(ResourcesApiTestCase):
         )
 
     @insert_resources_before_test(n=1)
-    def test_update_resource_ok(self):
-        _resource = self.get_one_resource()
+    @get_resource_before_test()
+    def test_update_resource_ok(self, resource):
         self.assert_response(
             self.fetch(
-                '/api/v0.1/resources/{}'.format(_resource['_id']),
+                '/api/v0.1/resources/{}'.format(resource['_id']),
                 method='PATCH', body='{"type":"test"}'
-            ), 200, {"_id": _resource['_id']}, 'OK'
+            ), 200, {"_id": resource['_id']}, 'OK'
         )
 
-        _resource["type"] = "test"
-        resource = self.get_one_resource()
-        self.assertEqual(_resource, resource)
+        resource["type"] = "test"
+        _resource = self.get_one_resource()
+        self.assertEqual(resource, _resource)
 
     @wait_to_start(0.5)
     @insert_resources_before_test(n=1)
-    def test_update_resource_fails(self):
-        _resource = self.get_one_resource()
-
+    @get_resource_before_test()
+    def test_update_resource_fails(self, resource):
         self.assert_response(
             self.fetch(
-                '/api/v0.1/resources/{}'.format(_resource['_id']),
+                '/api/v0.1/resources/{}'.format(resource['_id']),
                 method='PATCH', body=''
             ), 400, {"message": "JSON is required for this method"},
             'Bad Request'
