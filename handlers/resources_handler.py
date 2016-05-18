@@ -31,7 +31,6 @@ class MetaResourceHandler(JsonHandler):
 
 class ResourcesWithParamRESTHandler(MetaResourceHandler):
 
-    @tornado.web.asynchronous
     async def get(self, resource_id):
         resources = self._get_collection()
         try:
@@ -48,7 +47,6 @@ class ResourcesWithParamRESTHandler(MetaResourceHandler):
 
         self.finish_request()
 
-    @tornado.web.asynchronous
     async def patch(self, resource_id):
         arguments = self.get_json_arguments(force_presence=True)
         resources = self._get_collection()
@@ -67,7 +65,6 @@ class ResourcesWithParamRESTHandler(MetaResourceHandler):
             else:
                 self.write_json_error(status_code=http_status.HTTP_400)
 
-    @tornado.web.asynchronous
     async def delete(self, resource_id):
         resources = self._get_collection()
 
@@ -86,7 +83,7 @@ class ResourcesWithParamRESTHandler(MetaResourceHandler):
 
 
 class ResourcesWithoutParamRESTHandler(MetaResourceHandler):
-    @tornado.web.asynchronous
+
     async def post(self):
         arguments = self.get_json_arguments(force_presence=True)
         resources = self._get_collection()
@@ -101,7 +98,6 @@ class ResourcesWithoutParamRESTHandler(MetaResourceHandler):
             )
             self.finish_request(status_code=http_status.HTTP_201)
 
-    @tornado.web.asynchronous
     async def get(self):
         resources = self._get_collection()
         self.update_response(info={"resources": list()})
